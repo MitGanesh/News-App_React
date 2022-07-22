@@ -1,9 +1,19 @@
 import React, { Component } from 'react'
 import NewsItem from './NewsItem'
 import Spinner from './Spinner';
+import PropTypes from 'prop-types'
 
 
 export class News extends Component {
+  static defaultProps = {
+    country: 'in',
+    category : 'general'
+  }
+
+  static propTypes = { 
+    country: PropTypes.string,
+    category : PropTypes.string,
+  }
 
   constructor() {
     super();
@@ -15,7 +25,7 @@ export class News extends Component {
   }
 
   async componentDidMount() {
-    let url = 'https://newsapi.org/v2/top-headlines?country=in&apiKey=75c223c05e974a1ea991754a7946ff2a';
+    let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=75c223c05e974a1ea991754a7946ff2a`;
     this.setState({loading : true})
     let response = await fetch(url);
     let data = await response.json();
@@ -30,7 +40,7 @@ export class News extends Component {
 
   handlePrevClick = async () => {
     // console.log("Previous");
-    let url = `https://newsapi.org/v2/top-headlines?country=in&apiKey=75c223c05e974a1ea991754a7946ff2a&page=${this.state.page - 1}&pageSize=20`;
+    let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=75c223c05e974a1ea991754a7946ff2a&page=${this.state.page - 1}&pageSize=20`;
     this.setState({loading : true})
     let response = await fetch(url);
     let data = await response.json();
@@ -46,7 +56,7 @@ export class News extends Component {
   handleNextClick = async () => {
     // console.log("Next");
     if (!(this.state.page + 1 > Math.ceil(this.state.totalResults / 20))) {
-      let url = `https://newsapi.org/v2/top-headlines?country=in&apiKey=75c223c05e974a1ea991754a7946ff2a&page=${this.state.page + 1}&pageSize=20`;
+      let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=75c223c05e974a1ea991754a7946ff2a&page=${this.state.page + 1}&pageSize=20`;
       this.setState({loading : true})
       let response = await fetch(url);
       let data = await response.json();
@@ -64,7 +74,7 @@ export class News extends Component {
     return (
       <div className="container my-3">
         <center>
-          <h2>Newsweek - Top Headlines</h2>
+          <h2 style={{margin: '30px 0px'}}>Newsweek - Top Headlines</h2>
           {this.state.loading && <Spinner/>}
         </center>
         <div className="row">
