@@ -7,12 +7,12 @@ import PropTypes from 'prop-types'
 export class News extends Component {
   static defaultProps = {
     country: 'in',
-    category : 'general'
+    category: 'general'
   }
 
-  static propTypes = { 
+  static propTypes = {
     country: PropTypes.string,
-    category : PropTypes.string,
+    category: PropTypes.string,
   }
 
   constructor() {
@@ -25,8 +25,8 @@ export class News extends Component {
   }
 
   async componentDidMount() {
-    let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=75c223c05e974a1ea991754a7946ff2a`;
-    this.setState({loading : true})
+    let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=75c223c05e974a1ea991754a7946ff2a&page=${this.state.page}&pageSize=${this.props.pageSize}`;
+    this.setState({ loading: true })
     let response = await fetch(url);
     let data = await response.json();
     // console.log(data);
@@ -40,24 +40,24 @@ export class News extends Component {
 
   handlePrevClick = async () => {
     // console.log("Previous");
-    let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=75c223c05e974a1ea991754a7946ff2a&page=${this.state.page - 1}&pageSize=20`;
-    this.setState({loading : true})
+    let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=75c223c05e974a1ea991754a7946ff2a&page=${this.state.page - 1}&pageSize=${this.props.pageSize}`;
+    this.setState({ loading: true })
     let response = await fetch(url);
     let data = await response.json();
     // console.log(data);
-    
+
     this.setState({
       page: this.state.page - 1,
       article: data.articles,
-      loading : false
+      loading: false
     })
   }
 
   handleNextClick = async () => {
     // console.log("Next");
-    if (!(this.state.page + 1 > Math.ceil(this.state.totalResults / 20))) {
-      let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=75c223c05e974a1ea991754a7946ff2a&page=${this.state.page + 1}&pageSize=20`;
-      this.setState({loading : true})
+    if (!(this.state.page + 1 > Math.ceil(this.state.totalResults / this.props.pageSize))) {
+      let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=75c223c05e974a1ea991754a7946ff2a&page=${this.state.page + 1}&pageSize=${this.props.pageSize}`;
+      this.setState({ loading: true })
       let response = await fetch(url);
       let data = await response.json();
       console.log(data);
@@ -65,7 +65,7 @@ export class News extends Component {
       this.setState({
         page: this.state.page + 1,
         article: data.articles,
-        loading : false
+        loading: false
       })
     }
   }
@@ -74,8 +74,8 @@ export class News extends Component {
     return (
       <div className="container my-3">
         <center>
-          <h2 style={{margin: '30px 0px'}}>Newsweek - Top Headlines</h2>
-          {this.state.loading && <Spinner/>}
+          <h2 style={{ margin: '30px 0px' }}>Newsweek - Top Headlines</h2>
+          {this.state.loading && <Spinner />}
         </center>
         <div className="row">
           {!this.state.loading && this.state.article.map((element) => {
@@ -86,7 +86,7 @@ export class News extends Component {
         </div>
         <div className="container d-flex justify-content-between my-3">
           <button disabled={this.state.page <= 1} type="button" className="btn btn-dark" onClick={this.handlePrevClick}>&larr; Previous</button>
-          <button disabled={this.state.page + 1 > Math.ceil(this.state.totalResults / 20)} type="button" className="btn btn-dark" onClick={this.handleNextClick}>Next &rarr;</button>
+          <button disabled={this.state.page + 1 > Math.ceil(this.state.totalResults / this.props.pageSize)} type="button" className="btn btn-dark" onClick={this.handleNextClick}>Next &rarr;</button>
         </div>
       </div>
     )
