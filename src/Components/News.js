@@ -60,7 +60,7 @@ export class News extends Component {
       this.setState({ loading: true })
       let response = await fetch(url);
       let data = await response.json();
-      console.log(data);
+      // console.log(data);
 
       this.setState({
         page: this.state.page + 1,
@@ -74,7 +74,7 @@ export class News extends Component {
     return (
       <div className="container my-3">
         <center>
-          <h2 style={{ margin: '30px 0px' }}>Newsweek - Top Headlines</h2>
+          <h2 style={{ margin: '70px 0px 15px 0px' }}>Newsweek - Top {this.props.category[0].toUpperCase()+this.props.category.slice(1)} Headlines</h2>
           {this.state.loading && <Spinner />}
         </center>
         <div className="row">
